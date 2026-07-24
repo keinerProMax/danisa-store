@@ -1,0 +1,116 @@
+/* ============================================================
+   DANISSA STORE — Variables & Reset Global
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Rajdhani:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;600&display=swap');
+
+:root {
+  /* Paleta principal */
+  --bg:            #080808;
+  --bg2:           #111111;
+  --bg3:           #1a1a1a;
+  --card:          #161616;
+  --border:        #2a2a2a;
+
+  --purple:        #8b2fc9;
+  --purple-light:  #b06ef0;
+  --purple-dark:   #5b1a8a;
+  --purple-glow:   rgba(139,47,201,0.30);
+  --purple-soft:   rgba(139,47,201,0.10);
+
+  --white:         #ffffff;
+  --off-white:     #f0e8ff;
+  --gray:          #bbbbbb;
+  --gray-mid:      #666666;
+  --gray-dark:     #333333;
+
+  /* Tipografía */
+  --font-display:  'Playfair Display', serif;
+  --font-ui:       'Rajdhani', sans-serif;
+  --font-body:     'Cormorant Garamond', serif;
+
+  /* Sombras */
+  --shadow-sm:     0 2px 8px rgba(0,0,0,0.4);
+  --shadow-md:     0 8px 24px rgba(0,0,0,0.5);
+  --shadow-purple: 0 0 24px rgba(139,47,201,0.45);
+  --shadow-card:   0 4px 20px rgba(0,0,0,0.6);
+
+  /* Radios */
+  --r-sm:   6px;
+  --r-md:   12px;
+  --r-lg:   20px;
+  --r-full: 9999px;
+
+  /* Transiciones */
+  --t-fast:   0.15s ease;
+  --t-normal: 0.3s ease;
+  --t-slow:   0.5s ease;
+
+  /* Layout */
+  --navbar-h: 110px;
+  --max-w:    1200px;
+}
+
+/* ---- Reset ---- */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-ui);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+a  { text-decoration:none; color:inherit; }
+ul { list-style:none; }
+img { max-width:100%; display:block; }
+button { cursor:pointer; font-family:inherit; }
+input, textarea, select { font-family:inherit; }
+
+/* ---- Utilidades globales ---- */
+.container {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.hidden  { display:none !important; }
+.visible { display:block !important; }
+
+/* Toast de notificación */
+#toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--bg3);
+  border: 1px solid var(--purple);
+  border-radius: var(--r-md);
+  padding: 0.85rem 1.5rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  color: var(--off-white);
+  box-shadow: var(--shadow-purple);
+  z-index: 9999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+}
+#toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Overlay de pantalla */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+  z-index: 800;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-normal);
+}
+.overlay.active { opacity:1; pointer-events:all; }

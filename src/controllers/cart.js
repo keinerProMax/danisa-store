@@ -1,0 +1,117 @@
+'use strict';
+
+// ---- Agregar producto al carrito ----
+function addToCart(productId) {
+  const product = PRODUCTS.find(p => p.id === productId);
+  if (!product) return;
+
+  const cart = State.cart;
+  const idx  = cart.findIndex(i => i.id === productId);
+
+  if (idx >= 0) {
+    cart[idx].qty += 1;
+  } else {
+    cart.push({ ...product, qty: 1 });
+  }
+
+  State.cart = cart;
+  updateCartBadge();
+  showToast(`🛒 "${product.name}" agregado al carrito.`);
+}
+
+// ---- Eliminar producto del carrito ----
+function removeFromCart(productId) {
+  State.cart = State.cart.filter(i => i.id !== productId);
+  updateCartBadge();
+  renderCart();
+}
+
+// ---- Cambiar cantidad de un ítem ----
+function changeQty(productId, delta) {
+  const cart = State.cart;
+  const idx  = cart.findIndex(i => i.id === productId);
+  if (idx < 0) return;
+
+  cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+  State.cart = cart;
+  renderCart();
+}
+
+// ---- Actualizar badge del ícono de carrito en el navbar ----
+function updateCartBadge() {
+  const total = State.cart.reduce((sum, item) => sum + item.qty, 0);
+  const badge = document.getElementById('cart-badge');
+  badge.textContent    = total;
+  badge.style.display  = total > 0 ? 'flex' : 'none';
+}
+
+// ---- Renderizar lista del carrito ----
+function renderCart() {
+  const cart    = State.cart;
+  const list    = document.getElementById('cart-list');
+  const empty   = document.getElementById('cart-empty');
+  const summary = document.getElementById('cart-summary');
+
+  if (cart.length === 0) {
+    list.innerHTML = '';
+    empty.classList.remove('hidden');
+    summary.classList.add('hidden');
+    return;
+  }
+
+  empty.classList.add('hidden');
+  summary.classList.remove('hidden');
+
+  list.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-thumb">${item.emoji}</div>
+      <div>
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-cat">${item.cat}</div>
+        <div class="cart-item-price">${fmt(item.price * item.qty)}</div>
+      </div>
+      <div class="cart-item-controls">
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id},  1)">+</button>
+        </div>
+        <button class="btn-remove" onclick="removeFromCart(${item.id})" title="Eliminar">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  // Calcular totales
+  const subtotal = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const envio    = subtotal > 100000 ? 0 : 8000;
+  const total    = subtotal + envio;
+
+  document.getElementById('cart-subtotal').textContent = fmt(subtotal);
+  document.getElementById('cart-envio').textContent    = envio === 0 ? 'Gratis' : fmt(envio);
+  document.getElementById('cart-total').textContent    = fmt(total);
+}
+
+function checkout() {
+  if (!State.user) {
+    showToast('⚠️ Debes iniciar sesión para comprar.');
+    openAuth();
+    return;
+  }
+  if (State.cart.length === 0) return;
+
+  State.cart = [];
+  updateCartBadge();
+  renderCart();
+  showToast('🎉 ¡Compra realizada con éxito! Gracias por tu pedido.');
+}
+
+function initCart() {
+  document.getElementById('btn-cart').addEventListener('click', () => {
+    renderCart();
+    navigate('cart');
+  });
+
+  document.getElementById('btn-checkout').addEventListener('click', checkout);
+}
