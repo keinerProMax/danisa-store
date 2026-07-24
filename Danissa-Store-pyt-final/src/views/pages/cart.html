@@ -1,0 +1,38 @@
+<!-- ====== PÁGINA: CARRITO ====== -->
+<section id="page-cart" class="page">
+  <div class="cart-container">
+    <h2>Mi <span>Carrito</span></h2>
+
+    <!-- Estado vacío -->
+    <div id="cart-empty" class="cart-empty">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <p>Tu carrito está vacío.</p>
+      <button class="hero-cta" onclick="renderProducts('all'); navigate('shop');">
+        <i class="fa-solid fa-bag-shopping"></i> Ir a la tienda
+      </button>
+    </div>
+
+    <!-- Lista de ítems -->
+    <div id="cart-list" class="cart-list"></div>
+
+    <!-- Resumen -->
+    <div id="cart-summary" class="cart-summary hidden">
+      <div class="cart-summary-row">
+        <span>Subtotal</span>
+        <span id="cart-subtotal">$0</span>
+      </div>
+      <div class="cart-summary-row">
+        <span>Envío</span>
+        <span id="cart-envio">—</span>
+      </div>
+      <div class="cart-summary-row total">
+        <span>Total</span>
+        <span id="cart-total">$0</span>
+      </div>
+      <button id="btn-checkout" class="btn-checkout">
+        <i class="fa-solid fa-lock"></i> Finalizar compra
+      </button>
+    </div>
+
+  </div>
+</section><!-- /page-cart -->
